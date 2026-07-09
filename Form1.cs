@@ -6,32 +6,32 @@ namespace Tetris
 {
     public partial class Form1 : Form
     {
-        //��Ϸ����
-        private const int Cols = 10;          //��Ϸ�����ȣ�������
-        private const int Rows = 20;          //��Ϸ���߶ȣ�������
-        private const int CellSize = 25;      //ÿ��С��������ش�С
-        //��Ϸ״̬����
-        private int[,] grid = new int[Rows, Cols];//����0=�գ�1=�ѹ̶�
-        private int[][] currentBlock;           //��ǰ����飨��ά���飩
-        private int currentX, currentY;        //��ǰ�����������е�λ��
+        //游戏区域
+        private const int Cols = 10;          //列数
+        private const int Rows = 20;          //行数
+        private const int CellSize = 25;      //每格像素大小
+        //游戏状态
+        private int[,] grid = new int[Rows, Cols];//网格 0=空 1=已固定
+        private int[][] currentBlock;           //当前活动方块
+        private int currentX, currentY;        //当前方块位置
         private int score = 0;
         private bool isGameOver = false;
-        //���з�����״
+        //所有方块形状
         private int[][][] blocks = new int[][][]
         {
-            //һ��
+            //一字型
             new int[][]{ new int[] {1,1,1,1} },
-            //O��
+            //O型
             new int[][]{ new int[] {1,1},new int[] {1,1} },
-            //T��
+            //T型
             new int[][]{ new int[] {0,1,0},new int[] {1,1,1}},
-            //S��
+            //S型
             new int[][]{ new int[] {0,1,1},new int[] {1,1,0}},
-            //Z��
+            //Z型
             new int[][]{ new int[] {1,1,0},new int[] {0,1,1}},
-            //L��
+            //L型
             new int[][]{ new int[] {1,0,0},new int[] {1,1,1}},
-            //J��
+            //J型
             new int[][]{ new int[] {0,0,1},new int[] {1,1,1}}
         };
         private Random rand = new Random();
@@ -240,7 +240,7 @@ namespace Tetris
             gamePanel.Invalidate();
         }
 
-        //��д ProcessCmdKey ȷ���������κοؼ��϶�����Ӧ����
+        //重写 ProcessCmdKey 确保方向键在任何控件上都能响应
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             if (isGameOver) return base.ProcessCmdKey(ref msg, keyData);
@@ -287,10 +287,10 @@ namespace Tetris
         private void GamePanel_Paint(object sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics;
-            // �ð�ɫ��䱳��
+            // 用深色填充背景
             g.Clear(SystemColors.ControlDarkDark);
 
-            // �������и��ӣ�����1px���ⱻPanel�߽�ü���
+            // 绘制所有格子，偏移1px避免被Panel边界裁剪
             for (int row = 0; row < Rows; row++)
             {
                 for (int col = 0; col < Cols; col++)
@@ -310,7 +310,7 @@ namespace Tetris
                 }
             }
 
-            // ���Ƶ�ǰ�����
+            // 绘制当前活动方块
             if (currentBlock != null && !isGameOver)
             {
                 for (int r = 0; r < currentBlock.Length; r++)
